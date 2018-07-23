@@ -1,4 +1,5 @@
 create table USERS (
-	ID serial,
-	USER_NAME varchar(100) NOT NULL
-);
+	ID SERIAL PRIMARY KEY,
+	USERNAME varchar(100) NOT NULL,
+	PASSWORD varchar(255) NOT NULL
+	 );

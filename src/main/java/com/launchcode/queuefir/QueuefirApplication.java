@@ -1,5 +1,6 @@
 package com.launchcode.queuefir;
 
+import com.launchcode.queuefir.controllers.HomeController;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
