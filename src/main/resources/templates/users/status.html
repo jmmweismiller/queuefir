@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> 
+	<head th:replace="layout :: site-head">
+		<title>Queuefir - Status</title>
+	</head>
+	<body>
+		<header th:replace="layout :: site-header" /> 
+			<div id="current-status">
+				<span th:utext="${session?.currentStatus}">Please
+				register in order to participate in the kefir
+				queue!</span>
+			</div>
+			<footer th:replace="layout :: site-footer" />
+	</body>
+
+
+</html>

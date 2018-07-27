@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head th:replace="layout :: site-head">
+		<title>Queuefir</title>
+	</head>
+
+	<body>
+		<header th:replace="layout :: site-header" />
+			<div id="info">
+			<h1>Welcome to Queuefir!</h1>
+			<p> Kefir is a fermented milk product similar to a thin yogurt. It is tangy, slightly
+			carbonated, and extremely easy to make. One takes a symbiotic culture of
+			bacteria and yeast (otherwise known as "kefir grains") and places the culture into a
+			container of milk. The mixture is left to ferment for
+			up to 24 hours at room temperature.
+			The grains are withdrawn from the finished kefir, then placed into new milk to
+			continue the cycle.</p>
+			<p> As a result of this process, the grains grow in size. If the amount of milk
+			being fermented is not increased as well, the grains will ferment the milk too
+			rapidly to produce a good quality kefir.</p> 
+			<p> The question becomes "What do I do with all these extra kefir grains?"
+			Enter Queuefir! Queuefir is a simple application to assist those searching for
+			kefir to find those with extra kefir grains. </p> 
+			<p> The process is simple: </p>
+			<ol>
+				<li> Register and indicate whether you are sharing or receiving
+					kefir, as well as how to best contact you to arrange an
+					exchange. </li>
+				<li> Login and click on the status page. </li>
+				<li> Contact the person on the list to exchange kefir! </li>
+				<li> The receiving party confirms that an exchange has been made. They can then decide whether to eventually share
+					their grains, or to delete their account (they can always
+					re-register later!)</li>
+			</ol>
+			</div>
+			<footer th:replace="layout :: site-footer" />
+	</body>
+
+
+</html>

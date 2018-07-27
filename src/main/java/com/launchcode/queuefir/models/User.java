@@ -30,26 +30,38 @@ public class User {
 	@Column(name = "SEEKING_KEFIR")
 	private boolean seekingKefir;
 
+	@Column(name = "CONTACT_INFO")
+	private String contactInfo;
+
+	@Column(name = "PARTNER_ID")
+	private Long partnerId;
+
+	@Autowired @Transient @Getter @Setter
+	private boolean loggedIn;
+
 	@Autowired @Transient
 	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-	public User(String username, String password, String fullName, int zipCode, boolean seekingKefir) {
+	public User(String username, String password, String fullName, int zipCode, boolean seekingKefir, String contactInfo) {
 		this.username = username;
+		// The password should be salted eventually.
 		this.password = this.bCryptPasswordEncoder.encode(password);
 		this.fullName = fullName;
 		this.zipCode = zipCode;
 		this.seekingKefir = seekingKefir;
+		this.loggedIn = false;
+		this.contactInfo = contactInfo;
+		this.partnerId = 0L;
 	}
 
 	@Override
 	public String toString() {
 		return "User{" +
-				"id=" + id +
-				", username='" + username + '\'' +
-				", password='" + password + '\'' +
+				"username='" + username + '\'' +
 				", fullName='" + fullName + '\'' +
 				", zipCode=" + zipCode +
 				", seekingKefir=" + seekingKefir +
+				", contactInfo='" + contactInfo + '\'' +
 				'}';
 	}
 

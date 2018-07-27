@@ -4,12 +4,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class HomeController {
+public class ErrorController {
 
-    @GetMapping("/")
-    public String index() {
+    @GetMapping("/error")
+    public String errorPage() {
 
-        return "index";
+        return "errorPage";
     }
-
 }
+

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:fragment="site-head">
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" href="../public/css/styles.css" th:href="@{/css/styles.css}" />
+		<link rel="icon" href="../public/img/favicon.ico" th:href="@{/img/favicon.ico}" />
+		<script src="../public/js/jquery-3.1.1.min.js" th:src="@{/js/jquery-3.1.1.min.js}"></script>
+		<script src="../public/js/queuefir-scripts.js" th:src="@{/js/queuefir-scripts.js}"></script>
+	</head>
+	<body>
+		<header th:fragment="site-header" th:remove="tag">
+			<header>
+				<div th:unless="${session.user?.isLoggedIn()}">
+					<a href="index.html" th:href="@{/}"><img
+					   src="../public/img/site-logo.svg" width="100" th:src="@{/img/site-logo.svg}" /></a>
+					<a href="index.html" th:href="@{/}">Home</a>
+					<a href="users/login.html" th:href="@{/users/login}">Login</a>
+					<a href="users/register.html" th:href="@{/users/register}">Register</a>
+					<a href="recipes/recipes.html"
+					   th:href="@{/recipes}">Recipes</a>
+					<div id="logged-in-info">
+					Hello, Anonymous!
+					</div>
+				</div>
+			</header>
+			<header>
+				<div th:if="${session.user?.isLoggedIn()}">
+					<a href="index.html" th:href="@{/}"><img
+					   src="../public/img/site-logo.svg" width="100" th:src="@{/img/site-logo.svg}" /></a>
+					<a href="index.html" th:href="@{/}">Home</a>
+					<a href="users/status.html"
+						th:href="@{/users/status}">Status</a>
+					<a href="recipes/recipes.html"
+					   th:href="@{/recipes}">Recipes</a>
+					<div id="logged-in-info">
+					Hello, <span th:text="${session.user?.fullName}">Anonymous!</span>!
+					</div>
+					<form method="post" th:action="@{/users/logout}">
+						<input type="submit" value="Logout"/>
+					</form>
+				</div>
+			</header>
+			<ul id="messages"
+			    th:with="notifyMessages=${session[T(com.launchcode.queuefir.services.NotificationServiceImplementation).NOTIFY_MSG_SESSION_KEY]}">
+				<li th:each="message : ${notifyMessages}"
+				    th:text="${message.text}"
+				    th:class="${#strings.toLowerCase(message.type)}">
+				</li>
+				<span th:if="${notifyMessages}" th:remove="all"
+				      th:text="${#session.removeAttribute(T(com.launchcode.queuefir.services.NotificationServiceImplementation).NOTIFY_MSG_SESSION_KEY)}"></span>
+			</ul>
+		</header> 
+		<footer th:fragment="site-footer">
+			&copy; Queuefir, 2018
+		</footer>
+	</body>
+</html>

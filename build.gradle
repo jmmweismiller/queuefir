@@ -30,6 +30,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.flywaydb:flyway-core')
+	compile('org.thymeleaf.extras:thymeleaf-extras-springsecurity4')
 	compileOnly('org.projectlombok:lombok')
 	runtime('org.springframework.boot:spring-boot-devtools')
 	runtime('org.postgresql:postgresql')

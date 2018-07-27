@@ -26,4 +26,7 @@ public class RegisterForm {
 
     @Min(0) @Max(99950)
     private int zipCode;
+
+    @Size(min=1, max=500)
+    private String contactInfo;
 }
