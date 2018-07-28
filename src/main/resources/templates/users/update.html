@@ -1,47 +1,34 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"> 
 	<head th:replace="layout :: site-head">
-		<title>Queuefir - Registration</title>
+		<title>Queuefir - Update your account</title>
 	</head>
 	<body>
 		<header th:replace="layout :: site-header" />
-        <h1>Register for Queuefir.</h1>
+        <h1>Update your Queuefir account details.</h1>
 
-			<form method="post" th:object="${registerForm}" th:action="@{/users/register}">
-				<div> 
-					<label for="username">Username:</label>
-				</div>
-				<input id="username" 
-				       type="text" 
-				       name="username" 
-				       th:value="*{username}" 
-				       placeholder="Enter your username..." 
-				       required />
-				<span class="formError"
-				      th:if="${#fields.hasErrors('username')}"
-				      th:errors="*{username}">Invalid
-				      username.</span>
-				<div> 
-					<label for="fullName">Full name:</label>
+			<form method="post" th:object="${updateForm}" th:action="@{/users/update}">
+				<div>
+					<label for="fullName">Enter new full name:</label>
 				</div>
 				<input id="fullName" 
 				       type="text" 
 				       name="fullName" 
 				       th:value="*{fullName}" 
-				       placeholder="Enter your full name..." 
-				       required />
+				       placeholder="Enter your new full name..."
+				       />
 				<span class="formError"
 				      th:if="${#fields.hasErrors('fullName')}"
 				      th:errors="*{fullName}">Invalid name.</span>
-				<div> 
-					<label for="zipCode">ZIP Code:</label>
+				<div>
+					<label for="zipCode">Enter new ZIP Code:</label>
 				</div>
-				<input id="zipCode" 
-				       type="number" 
+				<input id="zipCode"
+				       type="text"
 				       name="zipCode" 
 				       th:value="*{zipCode}" 
-				       placeholder="Enter your ZIP code..." 
-				       required />
+				       placeholder="Enter your new ZIP code..."
+				       />
 				<span class="formError"
 				      th:if="${#fields.hasErrors('zipCode')}"
 				      th:errors="*{zipCode}">Invalid ZIP code.</span>
@@ -50,67 +37,65 @@
 				<input id="true" 
 				       type="radio" 
 				       name="SeekingKefir" 
-				       th:value="true"
-				       required />
+				       th:value="receiving"
+				       />
 				<label for="true">Receiving</label>
 				<input id="false" 
 				       type="radio" 
 				       name="SeekingKefir" 
-				       th:value="false"
-				       required />
+				       th:value="sharing"
+				       />
 				<label for="false">Sharing</label>
 				<span class="formError"
 				       th:if="${#fields.hasErrors('SeekingKefir')}"
 				       th:errors="*{SeekingKefir}">You must choose
 				       an option.</span>
 				<div> 
-					<label for="contactInfo">Preferred
+					<label for="contactInfo">New preferred
 						contact method and details:</label>
 				</div>
 				<textarea id="contactInfo" 
 				       type="text" 
 				       name="contactInfo" 
 				       th:value="*{contactInfo}" 
-				       placeholder="Enter your preferred
+				       placeholder="Enter your new preferred
 				       contact information." 
 				       rows=5
-				       cols=40
-				       required></textarea>
+				       cols=40>
+				</textarea>
 				<span class="formError"
 				      th:if="${#fields.hasErrors('contactInfo')}"
 				      th:errors="*{contactInfo}">Invalid
 				      contact information.</span>
 				<div>
 					<label for="password"
-					       th:value="*{password}">Password:</label>
+					       th:value="*{password}">New password:</label>
 				</div>
 				<input id="password" 
 				       type="password" 
 				       name="password"
-				       placeholder="Enter your password..." 
-				       th:value="*{password}"
-				       required />
+				       placeholder="Enter a new password..."
+				       th:value="*{password}" />
 				<span class="formError"
 				      th:if="${#fields.hasErrors('password')}"
 				      th:errors="*{password}">Invalid password.</span> 
 				<div>
 					<label for="confirmPassword"
 					       th:value="*{confirmPassword}">Confirm
-					       your password:</label>
+					       your new password:</label>
 				</div>
 				<input id="confirmPassword" 
 				       type="password" 
 				       name="confirmPassword"
-				       placeholder="Enter your password again..." 
+				       placeholder="Enter your new password again..."
 				       th:value="*{confirmPassword}"
-				       required />
+				       />
 				<span class="formError"
 				      th:if="${#fields.hasErrors('confirmPassword')}"
 				      th:errors="*{confirmPassword}">Invalid password.</span> 
 				<br>
-				<input type="submit" value="Register"/> 
+				<input type="submit" value="Update"/>
 				<p>
-				<a href="login.html" th:href="@{/users/login}">Already a Member ? Sign in Now.</a>
 			</form>
 
 			<footer th:replace="layout :: site-footer" />

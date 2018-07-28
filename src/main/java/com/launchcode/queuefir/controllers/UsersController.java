@@ -2,6 +2,8 @@ package com.launchcode.queuefir.controllers;
 
 import com.launchcode.queuefir.forms.LoginForm;
 import com.launchcode.queuefir.forms.RegisterForm;
+import com.launchcode.queuefir.forms.StatusForm;
+import com.launchcode.queuefir.forms.UpdateForm;
 import com.launchcode.queuefir.models.User;
 import com.launchcode.queuefir.repositories.UserRepository;
 import com.launchcode.queuefir.services.NotificationService;
@@ -97,6 +99,63 @@ public class UsersController {
         return "redirect:/";
     }
 
+    @GetMapping("/users/update")
+    public String update(UpdateForm updateForm) {
+        return "users/update";
+    }
+
+    @PostMapping("users/update")
+    public String updatePage(HttpSession httpSession, @Valid UpdateForm updateForm, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            notificationService.addErrorMessage("Please try to update your details again.");
+            return "users/update";
+        }
+
+        if (!updateForm.getPassword().equals(updateForm.getConfirmPassword())) {
+            notificationService.addErrorMessage("Password and confirmation do not match.");
+            return "users/update";
+        }
+
+        User currentUser = (User) httpSession.getAttribute("user");
+
+        if (!updateForm.getFullName().isEmpty()) {
+            currentUser.setFullName(updateForm.getFullName());
+        }
+
+        if (!updateForm.getZipCode().isEmpty()) {
+            int newZipCode = Integer.parseInt(updateForm.getZipCode());
+            if (newZipCode < 0 || newZipCode > 99950) {
+                notificationService.addErrorMessage("Invalid ZIP code provided.");
+                return "users/update";
+            }
+            currentUser.setZipCode(newZipCode);
+        }
+
+        if (!updateForm.getFullName().isEmpty()) {
+            currentUser.setFullName(updateForm.getFullName());
+        }
+
+        if (updateForm.getSeekingKefir() != null && !updateForm.getSeekingKefir().isEmpty()) {
+            if (updateForm.getSeekingKefir().equals("receiving")) {
+               currentUser.setSeekingKefir(true);
+            } else {
+                currentUser.setSeekingKefir((false));
+            }
+        }
+
+        if (!updateForm.getContactInfo().isEmpty()) {
+            currentUser.setContactInfo(updateForm.getContactInfo());
+        }
+
+        if (!updateForm.getPassword().isEmpty()) {
+            currentUser.setPassword(updateForm.getPassword());
+        }
+        userRepository.save(currentUser);
+
+       return "redirect:/";
+
+    }
 
     @GetMapping("/users/login")
     public String login(LoginForm loginForm) {
@@ -148,7 +207,7 @@ public class UsersController {
     }
 
     @GetMapping("/users/status")
-    public String status(HttpSession session) {
+    public String status(HttpSession session, StatusForm statusForm) {
         String currentStatus = "";
 
         User currentUser = (User) session.getAttribute("user");
@@ -161,14 +220,43 @@ public class UsersController {
         } else {
             currentStatus += sharingStatus(currentUser, sharingInZipCode, receivingInZipCode);
         }
-        //List<User> sharingInZipCode = userRepository.findByZipCodeAndSeekingKefirFalseOrderByIdAsc(currentUser.getZipCode());
-        //List<User> receivingInZipCode = userRepository.findByZipCodeAndSeekingKefirTrueOrderByIdAsc(currentUser.getZipCode());
-
 
         session.setAttribute("currentStatus", currentStatus);
         return "users/status";
     }
 
+    @PostMapping("/users/status")
+    public String statusPage(HttpSession httpSession, @Valid StatusForm statusForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            notificationService.addErrorMessage("Please try checking the status again.");
+            return "users/status";
+        }
+        User currentUser = (User) httpSession.getAttribute("user");
+
+        Optional<User> optionalUser = userRepository.findById(currentUser.getPartnerId());
+        User partnerUser;
+
+        if (optionalUser.isPresent()) {
+            partnerUser = optionalUser.get();
+        } else {
+            return "Something has gone wrong!";
+        }
+
+        if (statusForm.isReceivedKefir()) {
+            partnerUser.setPartnerId(0L);
+            currentUser.setPartnerId(0L);
+            userRepository.save(currentUser);
+            userRepository.save(partnerUser);
+        }
+
+        if (statusForm.isConvertToSharing()) {
+            currentUser.setSeekingKefir(false);
+        } else {
+           userRepository.delete(currentUser);
+           httpSession.removeAttribute("user");
+        }
+       return "redirect:/";
+    }
     private String sharingStatus(User currentUser, List<User> sharingInZipCode, List<User> receivingInZipCode) {
         String currentStatus = "";
         if (receivingInZipCode.isEmpty()) {
@@ -192,8 +280,8 @@ public class UsersController {
                 return "Something has gone wrong!";
             }
             currentStatus += "There's someone waiting in the queue to receive kefir!"
-                    + "\nPlease contact " + partnerUser.getFullName()
-                    + " using the following contact information:\n"
+                    + "<br>Please contact " + partnerUser.getFullName()
+                    + " using the following contact information:<br>"
                     + partnerUser.getContactInfo();
             }
         return currentStatus;
@@ -210,7 +298,12 @@ public class UsersController {
             }
         }
         int peopleAheadOfUser = headCount - sharingInZipCode.size();
-        if (peopleAheadOfUser == 1) {
+        if (sharingInZipCode.isEmpty()) {
+            currentStatus += "There is currently no one sharing kefir in your area. " +
+                    "Please consider becoming the first! " +
+                    "<br><a href='https://www.culturesforhealth.com/starter-cultures/kefir-starter-cultures.html'>" +
+                    "You can buy grains here!</a>";
+        } else if (peopleAheadOfUser == 1) {
             currentStatus += "There is currently 1 person ahead of you in the queue for your area.";
         } else if (peopleAheadOfUser > 0) {
             currentStatus += "There are currently " + peopleAheadOfUser + " people ahead of you in the queue for your area.";
@@ -234,8 +327,8 @@ public class UsersController {
             }
 
             currentStatus += "It is now your turn to receive kefir!"
-            + "\nPlease contact " + partnerUser.getFullName()
-            + " using the following contact information:\n"
+            + "<br><br>Please contact " + partnerUser.getFullName()
+            + " using the following contact information:<br>"
             + partnerUser.getContactInfo();
         }
        return currentStatus;

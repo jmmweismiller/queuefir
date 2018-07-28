@@ -1,14 +1,57 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"> 
+<html xmlns:th="http://www.thymeleaf.org">
 	<head th:replace="layout :: site-head">
 		<title>Queuefir - Status</title>
 	</head>
 	<body>
-		<header th:replace="layout :: site-header" /> 
+		<header th:replace="layout :: site-header" />
+        <h1>Your Queuefir Status:</h1>
 			<div id="current-status">
 				<span th:utext="${session?.currentStatus}">Please
 				register in order to participate in the kefir
 				queue!</span>
+			</div>
+			<div th:if="${session.user?.isLoggedIn() && session.user?.isSeekingKefir()}">
+				<form method="post" th:object="${statusForm}" th:action="@{/users/status}">
+                <br>
+				<legend>Have you successfully made the exchange?</legend>
+				<input id="yes"
+					   type="radio"
+					   name="ReceivedKefir"
+					   th:value="true"
+					   required />
+				<label for="yes">Yes, I was able to make contact.</label>
+				<input id="no"
+					   type="radio"
+					   name="ReceivedKefir"
+					   th:value="false"
+					   required />
+				<label for="no">No, I was unable to make contact.</label>
+				<span class="formError"
+					  th:if="${#fields.hasErrors('ReceivedKefir')}"
+					  th:errors="*{ReceivedKefir}">You must choose
+				       an option.</span>
+				<br>
+				<legend>If yes, would you like to be added to the list of people sharing kefir in your area or to delete your account?</legend>
+				<input id="convert"
+					   type="radio"
+					   name="convertToSharing"
+					   th:value="true"
+					   required />
+				<label for="convert">Convert to sharing.</label>
+				<input id="delete"
+					   type="radio"
+					   name="convertToSharing"
+					   th:value="false"
+					   required />
+				<label for="delete">Delete my account.</label>
+				<span class="formError"
+					  th:if="${#fields.hasErrors('convertToSharing')}"
+					  th:errors="*{convertToSharing}">You must choose
+				       an option.</span>
+					<br>
+					<input type="submit" value="Submit"/>
+				</form>
 			</div>
 			<footer th:replace="layout :: site-footer" />
 	</body>

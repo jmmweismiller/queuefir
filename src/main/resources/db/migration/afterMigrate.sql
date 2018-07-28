@@ -4,7 +4,7 @@ VALUES
 	('aanderson', '$2a$10$2nETgQXTGohaveBZ4Utvv.sPusTiN10DJ2JD8S3bePZL5xsYNUu.G', 'Alex Anderson', '66045', true, 'at my apartment!', 0),
 	('bbangalore', 'e5768e3d-ad4f-456e-a595-f70f3f0f895d', 'Betty Bangalore', '66045', false, '123 Any ST, locale', 0),
 	('ccliffton', '$2a$10$HR2sW45PG1M4jP6zY2LzGOQjxs/ZgdFijPDOFoawU1ZSD3r35kXXO', 'Charles Cliffton', '66046', true, 'everywhere', 0),
-	('ddeladier', '$2a$10$5Y352HGOmqsu/aNZMbtJKunIEa4eebd7rm5DexhF7X4WNoo7HY2bG', 'David Deladier', '66047', true, 'in a van down by the river', 0),
+	('ddeladier', '$2a$10$5Y352HGOmqsu/aNZMbtJKunIEa4eebd7rm5DexhF7X4WNoo7HY2bG', 'David Deladier', '66047', false, 'in a van down by the river', 0),
 	('wantsKefirUser1', '$2a$10$2nETgQXTGohaveBZ4Utvv.sPusTiN10DJ2JD8S3bePZL5xsYNUu.G', 'WK User 1', '66045', true, 'at my apartment 1!', 0),
 	('wantsKefirUser2', '$2a$10$2nETgQXTGohaveBZ4Utvv.sPusTiN10DJ2JD8S3bePZL5xsYNUu.G', 'WK User 2', '66045', true, 'at my apartment 2!', 0),
 	('wantsKefirUser3', '$2a$10$2nETgQXTGohaveBZ4Utvv.sPusTiN10DJ2JD8S3bePZL5xsYNUu.G', 'WK User 3', '66045', true, 'at my apartment 3!', 0),
