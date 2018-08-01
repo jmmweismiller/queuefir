@@ -1,9 +1,6 @@
 package com.launchcode.queuefir.controllers;
 
-import com.launchcode.queuefir.forms.LoginForm;
-import com.launchcode.queuefir.forms.RegisterForm;
-import com.launchcode.queuefir.forms.StatusForm;
-import com.launchcode.queuefir.forms.UpdateForm;
+import com.launchcode.queuefir.forms.*;
 import com.launchcode.queuefir.models.User;
 import com.launchcode.queuefir.repositories.UserRepository;
 import com.launchcode.queuefir.services.NotificationService;
@@ -185,7 +182,6 @@ public class UsersController {
 
     @PostMapping("/users/logout")
     public String logout(HttpSession session ) {
-        // I'd use session.invalidate, but re-entering the Spring Security generated password is painful.
         User currentUser = (User) session.getAttribute("user");
         currentUser.setLoggedIn(false);
         session.removeAttribute("user");
@@ -247,16 +243,16 @@ public class UsersController {
             currentUser.setPartnerId(0L);
             userRepository.save(currentUser);
             userRepository.save(partnerUser);
+            if (currentUser.isSeekingKefir()) {
+                return "redirect:/users/offboard";
+            }
         }
-
-        if (statusForm.isConvertToSharing()) {
-            currentUser.setSeekingKefir(false);
-        } else {
-           userRepository.delete(currentUser);
-           httpSession.removeAttribute("user");
-        }
+       notificationService.addErrorMessage("Please contact the administrator to resolve.");
        return "redirect:/";
     }
+
+
+
     private String sharingStatus(User currentUser, List<User> sharingInZipCode, List<User> receivingInZipCode) {
         String currentStatus = "";
         if (receivingInZipCode.isEmpty()) {
@@ -280,8 +276,8 @@ public class UsersController {
                 return "Something has gone wrong!";
             }
             currentStatus += "There's someone waiting in the queue to receive kefir!"
-                    + "<br>Please contact " + partnerUser.getFullName()
-                    + " using the following contact information:<br>"
+                    + "<br>Contact: " + partnerUser.getFullName()
+                    + "<br>Contact information: <br>"
                     + partnerUser.getContactInfo();
             }
         return currentStatus;
@@ -326,12 +322,36 @@ public class UsersController {
                 return "Something has gone wrong!";
             }
 
-            currentStatus += "It is now your turn to receive kefir!"
-            + "<br><br>Please contact " + partnerUser.getFullName()
-            + " using the following contact information:<br>"
+            currentStatus += "It is now your turn to receive kefir!<br>"
+            + "<br>Contact: " + partnerUser.getFullName()
+            + "<br>Contact information:<br>"
             + partnerUser.getContactInfo();
         }
        return currentStatus;
     }
 
+    @GetMapping("/users/offboard")
+    public String offboard(HttpSession session, OffBoardForm offBoardForm) {
+        return "users/offboard";
+    }
+
+    @PostMapping("/users/offboard")
+    public String offBoardPage(HttpSession httpSession, @Valid OffBoardForm offBoardForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            notificationService.addErrorMessage("An error has occurred. Please try again.");
+            return "users/offboard";
+        }
+
+        User currentUser = (User) httpSession.getAttribute("user");
+        if (offBoardForm.isConvertToSharing()) {
+            currentUser.setSeekingKefir(false);
+            userRepository.save(currentUser);
+            notificationService.addInfoMessage("Your account will now share kefir.");
+        } else {
+            userRepository.delete(currentUser);
+            httpSession.removeAttribute("user");
+            notificationService.addInfoMessage("Your account has been deleted.");
+        }
+        return "redirect:/";
+    }
 }

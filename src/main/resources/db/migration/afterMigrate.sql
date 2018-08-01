@@ -30,3 +30,9 @@ VALUES
 	('hasKefirUser3', '$2a$10$2nETgQXTGohaveBZ4Utvv.sPusTiN10DJ2JD8S3bePZL5xsYNUu.G', 'HK User 3', '66045', false, 'at my apartment 3!', 0),
 	('hasKefirUser4', '$2a$10$2nETgQXTGohaveBZ4Utvv.sPusTiN10DJ2JD8S3bePZL5xsYNUu.G', 'HK User 4', '66045', false, 'at my apartment 4!', 0),
 	('hasKefirUser5', '$2a$10$2nETgQXTGohaveBZ4Utvv.sPusTiN10DJ2JD8S3bePZL5xsYNUu.G', 'HK User 5', '66045', false, 'at my apartment 5!', 0);
+INSERT INTO RECIPES
+    (RECIPE_NAME, BODY, AUTHOR, AUTHOR_ID, PUBLISH_DATE)
+VALUES
+    ('Labneh (kefir cheese)', 'Strain some kefir until thick. Enjoy.', 'Alex Anderson', 1, '2018-07-25'),
+    ('Pancakes', 'Use kefir instead of buttermilk', 'Alex Anderson', 1, '2018-07-26'),
+    ('Chai kefir', 'After first fermentation, add a chai tea bag. Leave to steep for 12 hours.', 'Alex Anderson', 1, '2018-07-27');

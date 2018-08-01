@@ -17,7 +17,7 @@
 					<a href="users/login.html" th:href="@{/users/login}">Login</a>
 					<a href="users/register.html" th:href="@{/users/register}">Register</a>
 					<a href="recipes/recipes.html"
-					   th:href="@{/recipes}">Recipes</a>
+					   th:href="@{/recipes/index}">View Recipes</a>
 					<div id="logged-in-info">
 					Hello, Anonymous!
 					</div>
@@ -33,7 +33,11 @@
 					<a href="users/update.html"
 					   th:href="@{/users/update}">Update</a>
 					<a href="recipes/recipes.html"
-					   th:href="@{/recipes}">Recipes</a>
+					   th:href="@{/recipes/index}">View Recipes</a>
+					<a href="recipes/recipes.html"
+					   th:href="@{/recipes/submit}">Submit a Recipe</a>
+					<a href="recipes/update.html"
+					   th:href="@{/recipes/choose}">Update a Recipe</a>
 					<div id="logged-in-info">
 					Hello, <span th:text="${session.user?.fullName}">Anonymous!</span>!
 					</div>

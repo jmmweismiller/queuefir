@@ -2,6 +2,8 @@ package com.launchcode.queuefir.models;
 
 
 import lombok.*;
+
+import java.time.LocalDate;
 import java.util.Date;
 import javax.persistence.*;
 
@@ -13,8 +15,8 @@ public class Recipe {
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-        @Column(name = "NAME")
-        private String name;
+        @Column(name = "RECIPE_NAME")
+        private String recipeName;
 
         @Column(name = "BODY")
         private String body;
@@ -22,24 +24,28 @@ public class Recipe {
         @Column(name = "AUTHOR")
         private String author;
 
-        @Column(name = "DATE")
-        private Date date = new Date();
+        @Column(name = "AUTHOR_ID")
+        private Long authorId;
 
-        public Recipe(String name, String body, String author, Date date) {
-            this.name = name;
+        @Column(name = "PUBLISH_DATE")
+        private LocalDate publishDate;
+
+        public Recipe(String recipeName, String body, String author, Long authorId, LocalDate publishDate) {
+            this.recipeName = recipeName;
             this.body = body;
             this.author = author;
-            this.date = date;
+            this.authorId = authorId;
+            this.publishDate = publishDate;
         }
 
     @Override
     public String toString() {
-        return "Recipes{" +
+        return "Recipe{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", recipeName='" + recipeName + '\'' +
                 ", body='" + body + '\'' +
-                ", author=" + author +
-                ", date=" + date +
+                ", author='" + author + '\'' +
+                ", publishDate=" + publishDate +
                 '}';
     }
 }

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: site-head">
+    <title>Queuefir - Update Recipe</title>
+</head>
+<body>
+<header th:replace="layout :: site-header" />
+<h1>Update a Kefir Recipe</h1>
+
+<form method="post" th:object="${recipeForm}" th:action="@{/recipes/update}">
+    <div>
+        <label for="recipeName">Enter updated recipe name:</label>
+    </div>
+    <input id="recipeName"
+           type="text"
+           name="recipeName"
+           th:value="${session.chosenRecipe?.getRecipeName()}">
+    </input>
+    <span class="formError"
+          th:if="${#fields.hasErrors('recipeName')}"
+          th:errors="*{recipeName}">Invalid name.</span>
+    <p>
+    <div>
+        <label for="body">Enter updated recipe ingredients and instructions:</label>
+    </div>
+    <textarea id="body"
+              cols=70
+              rows=15
+              type="text"
+              name="body"
+              th:text="${session.chosenRecipe?.getBody()}"
+    ><span th:text="session.chosenRecipe?.getRecipeName()}">Recipe body</span></textarea>
+    <span class="formError"
+          th:if="${#fields.hasErrors('recipeName')}"
+          th:errors="*{recipeName}">Invalid entry.</span>
+    <br>
+    <input type="submit" value="Submit"/>
+    <p>
+    <form method="post" th:action="@{/recipes/delete}">
+        <input type="submit" value="Delete Recipe"/>
+    </form>
+</form>
+
+<footer th:replace="layout :: site-footer" />
+</body>
+
+
+</html>
