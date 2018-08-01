@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: site-head">
+    <title>Queuefir - Update your account</title>
+</head>
+<body>
+<header th:replace="layout :: site-header" />
+<br>
+<h2>Please select which recipe to update.</h2>
+<form method="post" th:object="${chosenRecipeName}" th:action="@{/recipes/choose}">
+    <select name="chosenRecipeName">
+        <th:block th:each="recipe : ${session.authoredRecipes}">
+            <option th:text="${recipe.getRecipeName()}">placeholder name</option>
+            <p th:text="${recipe.getRecipeName()}">this is a placehodler</p>
+        </th:block>
+    </select>
+    <input type="submit" value="Submit"/>
+</form>
+<footer th:replace="layout :: site-footer" />
+</body>
+
+
+</html>

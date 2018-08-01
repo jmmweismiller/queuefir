@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: site-head">
+    <title>Queuefir - Submit a Kefir Recipe</title>
+</head>
+<body>
+<header th:replace="layout :: site-header" />
+<h1>Submit a Kefir Recipe</h1>
+
+    <form method="post" th:object="${recipeForm}" th:action="@{/recipes/submit}">
+        <div>
+            <label for="recipeName">Enter recipe name:</label>
+        </div>
+        <input id="recipeName"
+               type="text"
+               name="recipeName"
+               th:value="*{recipeName}"
+               placeholder="Enter the recipe name..."
+        />
+        <span class="formError"
+              th:if="${#fields.hasErrors('recipeName')}"
+              th:errors="*{recipeName}">Invalid name.</span>
+        <p>
+        <div>
+            <label for="body">Enter recipe ingredients and instructions:</label>
+        </div>
+        <textarea id="body"
+                  cols=70
+                  rows=15
+               type="text"
+               name="body"
+               th:value="*{recipeName}"
+        >Enter your recipe here...</textarea>
+        <span class="formError"
+              th:if="${#fields.hasErrors('recipeName')}"
+              th:errors="*{recipeName}">Invalid entry.</span>
+        <input type="submit" value="Submit"/>
+        <p>
+    </form>
+
+    <footer th:replace="layout :: site-footer" />
+</body>
+
+
+</html>

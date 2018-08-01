@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: site-head">
+    <title>Queuefir - Kefir Recipes</title>
+</head>
+
+<body>
+<header th:replace="layout :: site-header" />
+<h1>User-submitted Kefir Recipes:</h1>
+<div id="recipes">
+    <div id="current-status">
+				<span th:utext="${session?.recipeString}">There are no recipes available!
+				</span>
+    </div>
+</div>
+<footer th:replace="layout :: site-footer" />
+</body>
+
+
+</html>
