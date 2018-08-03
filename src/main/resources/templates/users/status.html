@@ -11,46 +11,28 @@
 				register in order to participate in the kefir
 				queue!</span>
 			</div>
-			<div th:if="${session.user?.isLoggedIn() && session.user?.isSeekingKefir()}">
+			<div th:if="${session.user?.isLoggedIn()}">
 				<form method="post" th:object="${statusForm}" th:action="@{/users/status}">
                 <br>
 				<legend>Have you successfully made the exchange?</legend>
 				<input id="yes"
 					   type="radio"
-					   name="receivedKefir"
+					   name="transferredKefir"
 					   th:value="true"
 					   required />
 				<label for="yes">Yes, I was able to make contact.</label>
 					<br>
 				<input id="no"
 					   type="radio"
-					   name="receivedKefir"
+					   name="transferredKefir"
 					   th:value="false"
 					   required />
-				<label for="no">No, I was unable to make contact.</label>
+				<label for="no">No, I was unable to make contact. (Note: this will move to the next person, if one is available.)</label>
 				<span class="formError"
-					  th:if="${#fields.hasErrors('receivedKefir')}"
-					  th:errors="*{receivedKefir}">You must choose
+					  th:if="${#fields.hasErrors('transferredKefir')}"
+					  th:errors="*{transferredKefir}">You must choose
 				       an option.</span>
 				<br>
-<!--				<legend>Would you like to be added to the list of people sharing kefir in your area or to delete your account?</legend>
-				<input id="convert"
-					   type="radio"
-					   name="convertToSharing"
-					   th:value="true"
-					   required />
-				<label for="convert">Convert to sharing.</label>
-				<input id="delete"
-					   type="radio"
-					   name="convertToSharing"
-					   th:value="false"
-					   required />
-				<label for="delete">Delete my account.</label>
-				<span class="formError"
-					  th:if="${#fields.hasErrors('convertToSharing')}"
-					  th:errors="*{convertToSharing}">You must choose
-				       an option.</span>
-					<br> -->
 					<input type="submit" value="Submit"/>
 				</form>
 			</div>

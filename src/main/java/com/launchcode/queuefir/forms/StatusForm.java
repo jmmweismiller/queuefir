@@ -9,6 +9,6 @@ import javax.validation.constraints.NotNull;
 public class StatusForm {
 
     @NotNull
-    private boolean receivedKefir;
+    private boolean transferredKefir;
 
 }

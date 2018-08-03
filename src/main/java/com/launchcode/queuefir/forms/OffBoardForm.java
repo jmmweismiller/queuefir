@@ -9,5 +9,7 @@ import javax.validation.constraints.NotNull;
 public class OffBoardForm {
 
     @NotNull
-    private boolean convertToSharing;
+    private boolean convertingToSharing;
+
+    private boolean reenteringQueue = false;
 }

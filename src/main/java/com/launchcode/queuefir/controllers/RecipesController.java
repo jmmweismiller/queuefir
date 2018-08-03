@@ -101,12 +101,12 @@ public class RecipesController {
     }
 
     @PostMapping("/recipes/delete")
-    public String logout(HttpSession session) {
+    public String deleteRecipe(HttpSession session) {
         Recipe recipeToDelete = (Recipe) session.getAttribute("chosenRecipe");
         notificationService.addInfoMessage("Deleted " + recipeToDelete.getRecipeName() + "!");
         recipeRepository.delete(recipeToDelete);
         session.removeAttribute("chosenRecipe");
-        return "redirect:/recipes/update";
+        return "redirect:/recipes/index";
     }
 }
 

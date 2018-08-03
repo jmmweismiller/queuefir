@@ -12,5 +12,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
     List<User> findByZipCodeAndSeekingKefirTrueOrderByIdAsc(int zipCode);
     List<User> findByZipCodeAndSeekingKefirFalseAndPartnerIdLessThan(int zipCode, Long minimum);
     List<User> findByZipCodeAndSeekingKefirTrueAndPartnerIdLessThan(int zipCode, Long minimum);
+    List<User> findByPartnerId(Long partnerId);
 }
 

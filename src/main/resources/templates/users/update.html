@@ -97,7 +97,10 @@
 				<input type="submit" value="Update"/>
 				<p>
 			</form>
-
+		</form>
+		<form method="post" th:action="@{/users/delete}">
+			<input type="submit" value="Delete Account"/>
+		</form>
 			<footer th:replace="layout :: site-footer" />
 	</body>
 

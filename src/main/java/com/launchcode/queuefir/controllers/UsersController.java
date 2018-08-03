@@ -5,7 +5,6 @@ import com.launchcode.queuefir.models.User;
 import com.launchcode.queuefir.repositories.UserRepository;
 import com.launchcode.queuefir.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -23,44 +22,6 @@ public class UsersController {
 
     @Autowired
     private NotificationService notificationService;
-
-    /* @GetMapping("/users")
-    public Iterable<User> findAllUsers() {
-        return userRepository.findAll();
-    }
-
-    @GetMapping("/users/{userId}")
-    public Optional<User> findUserById(@PathVariable Long userId) {
-        return userRepository.findById(userId);
-    }
-
-
-    @PostMapping("/users")
-    public User createNewUser(@RequestBody User newUser) {
-        return userRepository.save(newUser);
-    } */
-
-    //change password
-
-    //turn into update
-    @PatchMapping("/users/{userId}")
-    public User updateUserById(@PathVariable Long userId, @RequestBody User userRequest) {
-
-        User userFromDb = userRepository.findById(userId).get();
-
-        userFromDb.setUsername(userRequest.getUsername());
-        userFromDb.setPassword(userRequest.getPassword());
-        userFromDb.setFullName(userRequest.getFullName());
-        userFromDb.setZipCode(userRequest.getZipCode());
-
-        return userRepository.save(userFromDb);
-    }
-
-    @DeleteMapping("users/{userId}")
-    public HttpStatus deleteUserById(@PathVariable Long userId) {
-        userRepository.deleteById(userId);
-        return HttpStatus.OK;
-    }
 
     @GetMapping("/users/register")
     public String register(RegisterForm registerForm) {
@@ -208,13 +169,17 @@ public class UsersController {
 
         User currentUser = (User) session.getAttribute("user");
 
+        if (currentUser.getPartnerId().equals(currentUser.getId())) {
+            return "redirect:/users/offboard";
+        }
+
         List<User> sharingInZipCode = userRepository.findByZipCodeAndSeekingKefirFalseAndPartnerIdLessThan(currentUser.getZipCode(), 1L);
         List<User> receivingInZipCode = userRepository.findByZipCodeAndSeekingKefirTrueAndPartnerIdLessThan(currentUser.getZipCode(), 1L);
 
         if (currentUser.isSeekingKefir()) {
             currentStatus += receivingStatus(currentUser, sharingInZipCode, receivingInZipCode);
         } else {
-            currentStatus += sharingStatus(currentUser, sharingInZipCode, receivingInZipCode);
+            currentStatus += sharingStatus(currentUser, receivingInZipCode);
         }
 
         session.setAttribute("currentStatus", currentStatus);
@@ -238,22 +203,36 @@ public class UsersController {
             return "Something has gone wrong!";
         }
 
-        if (statusForm.isReceivedKefir()) {
-            partnerUser.setPartnerId(0L);
+        if (currentUser.isSeekingKefir() && statusForm.isTransferredKefir())  {
+                List<User> partners = userRepository.findByPartnerId(currentUser.getPartnerId());
+                for (User partner : partners) {
+                    partner.setPartnerId(0L);
+                    userRepository.save(partner);
+                }
+                currentUser.setPartnerId(0L);
+                userRepository.save(currentUser);
+                return "redirect:/users/offboard";
+        } else if (currentUser.isSeekingKefir() && !statusForm.isTransferredKefir()) {
             currentUser.setPartnerId(0L);
             userRepository.save(currentUser);
+        } else if (!currentUser.isSeekingKefir() && statusForm.isTransferredKefir()) {
+            partnerUser.setPartnerId(partnerUser.getId());
             userRepository.save(partnerUser);
-            if (currentUser.isSeekingKefir()) {
-                return "redirect:/users/offboard";
+            currentUser.setPartnerId(0L);
+            userRepository.save(currentUser);
+        } else {
+            List<User> receivingInZipCode = userRepository.findByZipCodeAndSeekingKefirTrueAndPartnerIdLessThan(currentUser.getZipCode(), 1L);
+            if (!receivingInZipCode.isEmpty()) {
+                partnerUser.setPartnerId(0L);
+                userRepository.save(partnerUser);
+                currentUser.setPartnerId(receivingInZipCode.get(0).getPartnerId());
             }
         }
-       notificationService.addErrorMessage("Please contact the administrator to resolve.");
-       return "redirect:/";
+        return "redirect:/users/status";
     }
 
 
-
-    private String sharingStatus(User currentUser, List<User> sharingInZipCode, List<User> receivingInZipCode) {
+    private String sharingStatus(User currentUser, List<User> receivingInZipCode) {
         String currentStatus = "";
         if (receivingInZipCode.isEmpty()) {
            currentStatus += "The queue is empty!";
@@ -343,8 +322,17 @@ public class UsersController {
         }
 
         User currentUser = (User) httpSession.getAttribute("user");
-        if (offBoardForm.isConvertToSharing()) {
+
+        if (offBoardForm.isReenteringQueue()) {
+            currentUser.setPartnerId(0L);
+            userRepository.save(currentUser);
+            notificationService.addInfoMessage("Re-entered kefir queue.");
+            return "redirect:/users/status";
+        }
+
+        if (offBoardForm.isConvertingToSharing()) {
             currentUser.setSeekingKefir(false);
+            currentUser.setPartnerId(0L);
             userRepository.save(currentUser);
             notificationService.addInfoMessage("Your account will now share kefir.");
         } else {
@@ -352,6 +340,23 @@ public class UsersController {
             httpSession.removeAttribute("user");
             notificationService.addInfoMessage("Your account has been deleted.");
         }
+        return "redirect:/";
+    }
+
+    @PostMapping("users/delete")
+    public String deleteUser(HttpSession httpSession) {
+        User userToDelete = (User) httpSession.getAttribute("user");
+        if (userToDelete.getPartnerId() > 0) {
+           Optional<User> optionalPartnerUser = userRepository.findById(userToDelete.getPartnerId());
+           if (optionalPartnerUser.isPresent()) {
+               User partnerUser = optionalPartnerUser.get();
+               partnerUser.setPartnerId(0L);
+               userRepository.save(partnerUser);
+           }
+        }
+        userRepository.delete(userToDelete);
+        notificationService.addInfoMessage("Account Deleted!");
+        httpSession.removeAttribute("user");
         return "redirect:/";
     }
 }

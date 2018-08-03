@@ -11,21 +11,32 @@
         <legend>Would you like to be added to the list of people sharing kefir in your area or to delete your account?</legend>
         <input id="convert"
                type="radio"
-               name="convertToSharing"
-               th:value="true"
-               required />
+               name="convertingToSharing"
+               th:value="true" />
         <label for="convert">Convert to sharing.</label>
         <input id="delete"
                type="radio"
-               name="convertToSharing"
-               th:value="false"
-               required />
+               name="convertingToSharing"
+               th:value="false" />
         <label for="delete">Delete my account.</label>
         <span class="formError"
-              th:if="${#fields.hasErrors('convertToSharing')}"
-              th:errors="*{convertToSharing}">You must choose
+              th:if="${#fields.hasErrors('convertingToSharing')}"
+              th:errors="*{convertingToSharing}">You must choose
 				       an option.</span>
         <br>
+        <div th:if="${session.user?.getPartnerId().equals(session.user?.getId())}">
+            <input id="reenter"
+                   type="radio"
+                   name="reenteringQueue"
+                   th:value="true" />
+            <label for="reenter">I did not receive kefir.</label>
+            <span class="formError"
+                  th:if="${#fields.hasErrors('reenteringQueue')}"
+                  th:errors="*{reenteringQueue}">You must choose
+				       an option.</span>
+            <br>
+        </div>
+
         <input type="submit" value="Submit"/>
     </form>
 </div>
