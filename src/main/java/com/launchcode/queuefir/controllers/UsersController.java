@@ -177,7 +177,7 @@ public class UsersController {
         List<User> receivingInZipCode = userRepository.findByZipCodeAndSeekingKefirTrueAndPartnerIdLessThan(currentUser.getZipCode(), 1L);
 
         if (currentUser.isSeekingKefir()) {
-            currentStatus += receivingStatus(currentUser, sharingInZipCode, receivingInZipCode);
+            currentStatus += receivingStatus(session, currentUser, sharingInZipCode, receivingInZipCode);
         } else {
             currentStatus += sharingStatus(currentUser, receivingInZipCode);
         }
@@ -262,7 +262,7 @@ public class UsersController {
         return currentStatus;
     }
 
-    private String receivingStatus(User currentUser, List<User> sharingInZipCode, List<User> receivingInZipCode) {
+    private String receivingStatus(HttpSession httpSession, User currentUser, List<User> sharingInZipCode, List<User> receivingInZipCode) {
         String currentStatus = "";
         int headCount = 0;
         for (User user : receivingInZipCode) {
@@ -273,6 +273,13 @@ public class UsersController {
             }
         }
         int peopleAheadOfUser = headCount - sharingInZipCode.size();
+        boolean isInFront = true;
+
+        if (sharingInZipCode.isEmpty() || peopleAheadOfUser > 0) {
+            isInFront = false;
+        }
+        httpSession.setAttribute("isInFront", isInFront);
+
         if (sharingInZipCode.isEmpty()) {
             currentStatus += "There is currently no one sharing kefir in your area. " +
                     "Please consider becoming the first! " +

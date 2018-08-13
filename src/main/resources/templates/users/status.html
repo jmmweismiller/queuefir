@@ -11,7 +11,7 @@
 				register in order to participate in the kefir
 				queue!</span>
 			</div>
-			<div th:if="${session.user?.isLoggedIn()}">
+			<div th:if="${session.user?.isLoggedIn()} and ${session?.isInFront}">
 				<form method="post" th:object="${statusForm}" th:action="@{/users/status}">
                 <br>
 				<legend>Have you successfully made the exchange?</legend>
